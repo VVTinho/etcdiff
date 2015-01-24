@@ -4,7 +4,8 @@
 #: Date         : 2015-01-22
 #: Author       : "Vladimir" <vladimir.trigueiros@gmail.com>
 #: Version      : 1.0
-#: Description  :
+#: Description  : Compare file changes in directore /etc
+#  See project: https://github.com/VVTinho/etcdiff
 #: Options      : Inget
 
 
@@ -24,6 +25,17 @@ path_etc="/usr/local/etc"
 
 # Create a variabel path_ba, and add a path to directorie /backups
 path_ba="/usr/local/etc/backups"
+
+path_error="${path_ba}/error.${current_time}.log"
+
+# Redirect both stdout and stderr to file error.${current_time}.log
+(
+    echo "${current_time} : Starting work"
+
+    # ... more commands ...
+
+    echo "${current_time} : Done"
+) >& $path_error
 
 # Check if there is a directorie backups in directorie etc
 if [ ! -d $path_ba ]
@@ -139,26 +151,11 @@ then
 
 	diff etc-$timestamp.B.md5 etc-$current_time.C.md5
 
-#	if diff ${timestamp} etc-$current_time.C.md5 > /dev/null 2>&1
-#	then
-#               echo "Files have not changed."
-#
-#		result=$(diff ${timestamp} etc-$current_time.C.md5 >> etc-$current_time.c_switch_output.txt)
-#                printf "${result}\n"
-#        else
-#                echo "Files have changed."
-#
-#		echo "Copy the result/output to a file etc-$current_time.c_switch_output.txt."
-#
-#               result=$(diff ${timestamp} etc-$current_time.C.md5 >> etc-$current_time.c_switch_output.txt)
-#                printf "${result}\n"
-#        fi
-#
-         echo "-------------------------------------------"
+	echo "-------------------------------------------"
 
-	 echo ""
+	echo ""
 
-	 exit 0
+	exit 0
 fi
 
 # Check if the first input argument $1 is h
@@ -171,10 +168,13 @@ then
         echo "HELP TEXT!"
 	echo "See man page for etcdiff ( ./etcdiff.sh manpage-etcdiff )"
 
-	printf "Command\tc\t=\tcopy timestamp\n"
-	printf "Command\tl\t=\tlist timestamps\n"
-	printf "Command\tr\t=\r timestamp\n"
-        printf "Command\th\t=\help text\n"
+	echo "switch c = copy timestamp a compare changes"
+	echo "switch l = list all files in backups directorie"
+	echo "switch r and switch ALL = delete alla files in backups directorie"
+	echo "switch h = help text"
+	echo "switch v = display the script version"
+	echo "switch libnotify = Instal libnotify"
+	echo "switch manpage-etcdiff = display etcdiff man page manual"
 
 	echo "-------------------------------------------"
 
